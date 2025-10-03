@@ -12,7 +12,7 @@ def get_race(year, race_number):
         session = fastf1.get_session(year, race_number, 'R')
         return session
     except Exception as e:
-        raise Exception(f'An error occurred while getting the session: {e}') from e
+        raise Exception(f'An error occurred while getting the {year} session: {e}') from e
 
 
 # Helper function that plots the lap times for a driver
