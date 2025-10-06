@@ -2,6 +2,11 @@ import fastf1
 import fastf1.plotting as f1plt
 import matplotlib.pyplot as plt
 import pandas as pd
+from datetime import datetime, timezone, timedelta
+
+# Upload delay. Fastf1 typically takes 1-2 hours before uploading a current race's data. I use an 24 hours delay to make it safer
+# but feel free to change it to a lower value if necessary/useful
+UPLOAD_DELAY = timedelta(hours = 24) # MAY NEED CHANGE
 
 # Helper function to load a race
 def get_race(year, race_number):
