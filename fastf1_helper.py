@@ -4,9 +4,9 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from datetime import datetime, timezone, timedelta
 
-# Upload delay. Fastf1 typically takes 1-2 hours before uploading a current race's data. I use an 24 hours delay to make it safer
+# Upload delay. Fastf1 typically takes 1-2 hours before uploading a current race's data. I use a 48 hours delay to make it safer
 # but feel free to change it to a lower value if necessary/useful
-UPLOAD_DELAY = timedelta(hours = 24) # MAY NEED CHANGE
+UPLOAD_DELAY = timedelta(hours = 48) # MAY NEED CHANGE
 
 # Helper function to load a race
 def get_race(year, race_number):
@@ -26,7 +26,18 @@ def get_season(year):
         if year < 2018 or year > 2025:
             raise ValueError(f'Error, Season {year} not available in this database. Available seasons are: 2018-2025')
         schedule = fastf1.get_event_schedule(year)
-
+        # Remove future races from the schedule, using an upload delay to be safe
+        safe_cutoff_date = pd.to_datetime(datetime.now(timezone.utc) - UPLOAD_DELAY)
+        if 'Session5DateUtc' in schedule.columns:
+            schedule_dates = schedule['Session5DateUtc']
+            # Check if the dates are indeed timezone aware (may differ by season):
+            if schedule_dates.dt.tz == None:
+                # If the dates are NOT datetime aware
+                schedule_dates = schedule_dates.dt.tz_localize('UTC')
+            else:
+                # If the dates are datetime aware
+                schedule_dates = schedule_dates.dt.tz_convert('UTC')
+            schedule = schedule[schedule_dates < safe_cutoff_date].copy()
         # Create a new dataframe for the current season
         avg_season_stats = pd.DataFrame()
         # Repeat the same procedure for every other race in the current session
