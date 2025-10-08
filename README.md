@@ -26,7 +26,7 @@
   conda --version
   ```
   
-- _Create a new virtual environment using Conda:_
+- _Create a new virtual environment using Conda and the provided yml file above:_
   ```
   conda env create -f environment.yml -n <your_env_name_here>
   ```
