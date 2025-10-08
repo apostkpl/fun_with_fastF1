@@ -1,0 +1,25 @@
+name: fastf1
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+
+  - cpython=3.11.13=py311hd8ed1ab_0
+  - fastf1=3.6.1=pyhd8ed1ab_0
+  - matplotlib=3.10.6=py311haa95532_0
+  - numpy=2.3.3=py311h80b3fa1_0
+  - pillow=11.3.0=py311h26a3c52_3
+  - pip=25.2=pyhc872135_0
+  - pyqt=6.7.1=py311h5da7b33_0
+  - pyqt6-sip=13.9.1=py311h827c3e9_0
+  - python=3.11.13=h981015d_0
+  - python-dateutil=2.9.0.post0=pyhe01879c_2
+  - python-fastjsonschema=2.21.2=pyhe01879c_0
+  - python-json-logger=2.0.7=pyhd8ed1ab_0
+  - python-tzdata=2025.2=pyhd8ed1ab_0
+  - python_abi=3.11=2_cp311
+  - qtbase=6.7.2=h0804d20_0
+  - requests=2.32.5=pyhd8ed1ab_0
+  - scikit-learn=1.7.1=py311h3fbe716_0
+  - sqlite=3.50.2=hda9a48d_1
+  - tk=8.6.15=hf199647_0
