@@ -9,3 +9,26 @@ __Tools used for this Project:__
 - _Bash/VIM (for minor details) and GitBash_
 
   [![tools](https://skillicons.dev/icons?i=anaconda,py,bash,sklearn,git)](https://skillicons.dev)
+
+__To create an environment with the basic libraries needed for this project:__
+- _Download the Anaconda Installer (MiniConda is recommended if you are used to the Terminal):_
+  ```
+  https://www.anaconda.com/download
+  ```
+  
+- _Initialize the Conda environment in Powershell:_
+  ```
+  conda init powershell
+  ```
+
+- _Restart your terminal and check if conda works:_
+  ```
+  conda --version
+  ```
+  
+- _Create a new virtual environment using Conda:_
+  ```
+  conda env create -f environment.yml -n <your_env_name_here>
+  ```
+- _Have fun_ 😎
+  
