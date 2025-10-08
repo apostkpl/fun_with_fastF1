@@ -7,4 +7,4 @@
 - Python Libraries (NumPy, Matplotlib, Pandas, Sklearn)
 - Bash/VIM (for minor details) and GitBash
 
-  [![tools](https://skillicons.dev/icons?i=py,bash,sklearn,git)](https://skillicons.dev)
+  [![tools](https://skillicons.dev/icons?i=anaconda,py,bash,sklearn,git)](https://skillicons.dev)
