@@ -48,14 +48,18 @@ def get_season(year):
             
             current = get_race(year, i)
             current.load(laps = True, telemetry = False, weather = False, messages = False)
-
+            # Get the name of the current race
+            circuit_name = current.event['EventName']
             # Aggregate important stats into a dataframe
             avg_current = current.laps.groupby('Driver').agg(
                 avgLapTime = ('LapTime', 'mean'),
                 stdLapTime = ('LapTime', 'std'),
-                lapsCompleted = ('LapNumber', 'max')
+                lapsCompleted = ('LapNumber', 'max'),
+                Team = ('Team', 'first') # Although not "aggregating" it, I need the team name from the .laps() property for later
                 ).reset_index()
 
+            # Add the circuit name to my aggregated "avg_current" DataFrame
+            avg_current['CircuitName'] = circuit_name 
             # Convert Timedelta to seconds
             avg_current['avgLapTime_s'] = avg_current['avgLapTime'].dt.total_seconds()
             avg_current['stdLapTime_s'] = avg_current['stdLapTime'].dt.total_seconds()
