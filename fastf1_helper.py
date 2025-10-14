@@ -41,7 +41,8 @@ def get_season(year):
         # Create a new dataframe for the current season
         avg_season_stats = pd.DataFrame()
         # Repeat the same procedure for every other race in the current session
-        for i in schedule.index:
+        total_races = schedule['RoundNumber'].dropna().astype(int).tolist()
+        for i in total_races:
             # The first index/row is the test race of the season
             if i == 0:
                 continue
@@ -59,19 +60,25 @@ def get_season(year):
                 ).reset_index()
 
             # Add the circuit name to my aggregated "avg_current" DataFrame
-            avg_current['CircuitName'] = circuit_name 
+            avg_current['CircuitName'] = circuit_name
+            # Check if a driver had a DNF in the current race
+            dnf_types = ['Retired', 'Accident', 'Mechanical', 'Engine', 'Brakes', 'Damage', 'Collision', 'Hydraulics']
+            results_df = current.results[['Abbreviation', 'GridPosition', 'Position', 'Status']].rename(
+                columns = {'Abbreviation': 'Driver'}
+            )
+            results_df['isDNF'] = results_df['Status'].apply(lambda stat: 1 if stat in dnf_types else 0)
+            results_df.drop(columns = ['Status'], inplace = True)
             # Convert Timedelta to seconds
             avg_current['avgLapTime_s'] = avg_current['avgLapTime'].dt.total_seconds()
             avg_current['stdLapTime_s'] = avg_current['stdLapTime'].dt.total_seconds()
             avg_current = avg_current.drop(['avgLapTime', 'stdLapTime'], axis = 1)
 
-            # Merge .laps and .results data
+            # Merge the aggregated df with the results DNF status
             avg_current = avg_current.merge(
-                # We have to rename the 'Abbreviation' column, because in our dataframe it's called 'Driver'
-                current.results[['Abbreviation', 'GridPosition', 'Position']].rename(columns = {'Abbreviation': 'Driver'}),
+                results_df, # includes 'Abbreviation', 'GridPosition', 'Position', plus the new 'isDNF' columns ('Status' col dropped)
                 how = 'left',
                 on = 'Driver'
-                )
+            )
 
             # Keep track of the race number and the current year
             avg_current['raceID'] = i
