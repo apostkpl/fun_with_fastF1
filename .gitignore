@@ -6,3 +6,6 @@ __pycache__/
 
 # Ignore Jupyter Notebook virtual documents
 .virtual_documents/
+
+# Ignore VScode cache data
+.vscode/
