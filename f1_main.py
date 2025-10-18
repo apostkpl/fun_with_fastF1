@@ -3,6 +3,7 @@ import fastf1
 from f1_downloader import get_season
 from f1_train_data import collect_historical_data, drop_na
 from f1_future_data import get_next_race, pred_cols
+from f1_predictor import predict_winner, class_report
 
 # Current Year. Only works for 2025 for now
 CURRENT_YEAR = 2025
@@ -23,9 +24,11 @@ stats_2025 = get_season(2025)
 all_stats = pd.concat([stats_2022, stats_2023, stats_2024, stats_2025], ignore_index = True)
 # Sort the dataframe chronologically:
 all_stats = all_stats.sort_values(by = ['Year', 'raceID']).reset_index(drop = True)
+# We will need the 'Winner' -binary- column to create our y_train column
+all_stats['Winner'] = (all_stats['Position'] == 1).astype(int) 
 
 # Transform our dataframe to get the relevant data for training (Rolling averages, DNFs, historical positions etc)
-collect_historical_data(all_stats) # Operations are in-place, assigning a value would lead to None
+collect_historical_data(all_stats) # Operations are in-place, assigning the result to a value would lead to None
 
 # Extract the last race stats, to create the future race stats (the ones we want to predict)
 next_race = get_next_race(all_stats)
@@ -45,3 +48,18 @@ drop_na(full_df)
 X_cols = pred_cols()
 X_future = full_df[full_df['isPredictionData'] == 1][X_cols]
 X_train = full_df[full_df['isPredictionData'] != 1][X_cols]
+y_train = full_df[full_df['isPredictionData'] != 1]['Winner']
+
+# For identification purposes
+ID_cols = ['Driver', 'Year', 'raceID']
+ids = full_df[full_df['isPredictionData'] == 1][ID_cols]
+train_ids = full_df[full_df['isPredictionData'] != 1][ID_cols]
+
+# Predict the winner of the next Gran Prix
+results = predict_winner(X_train, y_train, X_future, ids)
+print(results)
+
+# Get a classification report for our model
+print("\n\n")
+report = class_report(X_train, y_train, train_ids)
+print(report)

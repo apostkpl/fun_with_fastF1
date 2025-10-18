@@ -55,15 +55,8 @@ def perTeam_rolling_averages(raw_data):
         lambda x: x.rolling(window = WINDOW_SIZE, min_periods = 1).mean().shift(1)
     )
 
-    # Create a "per_team" df for summed "Position"s
-    per_team_stats = raw_data.groupby(['Year', 'raceID', 'Team'])['Position'].mean().reset_index()
-    # Merge the new summed Positions (will rename them) with the original df
-    per_team_stats.rename(columns = {'Position': 'perRace_Team_Avg_Pos'}, inplace = True)
-    raw_data = raw_data.merge(
-        per_team_stats[['Year', 'raceID', 'Team', 'perRace_Team_Avg_Pos']],
-        on=['Year', 'raceID', 'Team'],
-        how='left'
-        )
+    # Create a "per_team" average position
+    raw_data['perRace_Team_Avg_Pos'] = raw_data.groupby(['Year', 'raceID', 'Team'])['Position'].transform('mean')
 
     raw_data['Rolling_Prev_Avg_TeamFinalPos'] = raw_data.groupby('Team')['perRace_Team_Avg_Pos'].transform(
         lambda x: x.rolling(window = WINDOW_SIZE, min_periods = 1).mean().shift(1)
