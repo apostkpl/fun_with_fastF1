@@ -1,8 +1,8 @@
 import pandas as pd
 import numpy as np
 
-CURRENT_GRID = ['VER', 'RUS', 'SAI', 'HAM', 'LEC', 'ALB', 'TSU', 'BEA', 'ANT', 'LAW',
-                'GAS', 'BOR', 'HAD', 'HUL', 'COL', 'STR', 'OCO', 'PIA', 'ALO', 'NOR']
+CURRENT_GRID = ['VER', 'NOR', 'LEC', 'RUS', 'HAM', 'PIA', 'ANT', 'BEA', 'SAI', 'ALO',
+                'HUL', 'LAW', 'TSU', 'GAS', 'BOR', 'COL', 'OCO', 'STR', 'ALB', 'HAD']
 
 def get_next_race(data_df, grid = False):
     next_race = data_df.iloc[-20:, :].copy()

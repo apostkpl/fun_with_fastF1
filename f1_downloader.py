@@ -40,6 +40,7 @@ def get_season(year):
         avg_season_stats = pd.DataFrame()
         # Repeat the same procedure for every other race in the current session
         total_races = schedule['RoundNumber'].dropna().astype(int).tolist()
+        print("\nPlease Wait while season data is downloading...")
         for i in total_races:
             # The first index/row is the test race of the season
             if i == 0:
@@ -86,6 +87,7 @@ def get_season(year):
             avg_season_stats = pd.concat([avg_season_stats, avg_current], ignore_index = True)
 
         # Return the whole season stats dataframe
+        print(f"Season {year} downloaded successfully!")
         return avg_season_stats
         
     except Exception as e:

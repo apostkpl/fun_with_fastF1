@@ -8,11 +8,11 @@ from f1_future_data import pred_cols
 # These parameters are estimated using Jupyter and doing some random tests.
 # Please do not change here, test first in the ipynb file
 HARD_CODED_PARAMS = {'gamma': np.float64(0.05),
-                         'learning_rate': np.float64(0.027882270922132885),
-                         'max_depth': 8,
-                         'min_child_weight': 5,
-                         'n_estimators': 294,
-                         'scale_pos_weight': np.float64(16.78048780487805)
+                         'learning_rate': np.float64(0.1),
+                         'max_depth': 15,
+                         'min_child_weight': 58,
+                         'n_estimators': 450,
+                         'scale_pos_weight': np.float64(16.0)
                          }
 def create_model(params = HARD_CODED_PARAMS):
     xgbc = xgb.XGBClassifier(objective='binary:logistic',

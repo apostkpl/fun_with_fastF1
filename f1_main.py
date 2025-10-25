@@ -1,5 +1,7 @@
 import pandas as pd
 import fastf1
+import logging
+from tabulate import tabulate
 from f1_downloader import get_season
 from f1_train_data import collect_historical_data, drop_na
 from f1_future_data import get_next_race, pred_cols
@@ -12,6 +14,10 @@ CURRENT_YEAR = 2025
 # (could be a few hundred MBs)
 my_path = r'C:\Users\apost\miniconda3\envs\fastF1_cache'
 fastf1.Cache.enable_cache(my_path)
+
+# Only show errors from fastf1 and not the typical huge messages
+logging.getLogger('fastf1').setLevel(logging.ERROR)
+logging.getLogger('fastf1.core').setLevel(logging.ERROR)
 
 # Download season data
 # WARNING: get_season() is a custom function. It downloads specific columns, and it aggregates some
@@ -57,9 +63,29 @@ train_ids = full_df[full_df['isPredictionData'] != 1][ID_cols]
 
 # Predict the winner of the next Gran Prix
 results = predict_winner(X_train, y_train, X_future, ids)
-print(results)
+print("\nRace Results (without using current quali position)\n")
+print(tabulate(results, headers = ["Driver", "Winning %"], tablefmt = "double_outline"))
 
 # Get a classification report for our model
 print("\n\n")
 report = class_report(X_train, y_train, train_ids)
+print(report)
+
+
+print("*****" * 8)
+print("*****" * 8)
+# Define the columns that are gonna be used for training !!! INCLUDING QUALI RESULTS !!!
+X_cols_grid = pred_cols(grid = True)
+X_future_grid = full_df[full_df['isPredictionData'] == 1][X_cols_grid]
+X_train_grid = full_df[full_df['isPredictionData'] != 1][X_cols_grid]
+y_train = full_df[full_df['isPredictionData'] != 1]['Winner']
+
+# Predict the winner of the next Gran Prix !!! WITH THE CURRENT GRID. IT HAS TO BE ENTERED MANUALLY !!!
+results = predict_winner(X_train_grid, y_train, X_future_grid, ids)
+print("\nRace Results (WITH current quali position)\n")
+print(tabulate(results, headers = ["Driver", "Winning %"], tablefmt = "double_outline"))
+
+# Get a classification report for our model
+print("\n\n")
+report = class_report(X_train_grid, y_train, train_ids)
 print(report)
